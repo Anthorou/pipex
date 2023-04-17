@@ -1,0 +1,48 @@
+#!/bin/bash
+./pipex infile "ping -c 2 google.com" "grep hello" outfile
+< infile ping -c 2 google.com | grep hello > output
+diff outfile output > result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "ls" "wc" outfile
+< infile ls | wc > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "cat" "grep pid" outfile
+< infile cat | grep pid > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "ping -c 2 google.com" "grep round" outfile
+< infile ping -c 2 google.com | grep round > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "ls" "nonexist" outfile
+< infile ls | nonexist > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "nonexist" "cat" outfile
+< infile nonexist | cat > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "ls" "nonexist" outfile
+< infile ls | nonexist > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "nonexist" "ls" outfile
+< infile nonexist | ls > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result

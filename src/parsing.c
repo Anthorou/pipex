@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:04:21 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/14 16:29:21 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/17 15:52:05 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ t_files	*parsing_files(char **argv, int argc)
 {
 	t_files	*files;
 
+	if (access(argv[1], R_OK) == -1)
+		return (NULL);
+	if (access(argv[argc - 1], W_OK) == -1)
+		return (NULL);
 	files = (t_files *)malloc(sizeof(t_files));
-	if (access(argv[1], F_OK | R_OK) != 0)
-		return (NULL);
-	if (access(argv[1], F_OK | W_OK) != 0)
-		return (NULL);
-	files->infile = argv[1];
-	files->outfile = argv[argc - 1];
+	files->infile = files_check(argv[1], 0);
+	files->outfile = files_check(argv[argc - 1], 1);
 	return (files);
 }
 

@@ -6,7 +6,7 @@
 #    By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/30 18:05:32 by aroussea          #+#    #+#              #
-#    Updated: 2023/04/14 15:10:06 by aroussea         ###   ########.fr        #
+#    Updated: 2023/04/17 11:49:09 by aroussea         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ NAME = pipex
 SOURCE = src/main.c \
 		 src/free.c \
 		 src/parsing.c \
+		 src/check.c \
 		 
 LIB = libft/libft.a
 HEADERS	:= -I ./include
