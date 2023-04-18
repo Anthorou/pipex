@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 15:04:13 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/17 16:08:01 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/18 14:58:44 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,19 +36,23 @@ static void	pipex(t_list *cmd, t_files *files, int argc)
 	dup2(files->infile, STDIN_FILENO);
 	while (i < argc - 3)
 	{
-		pipe_check(fd);
-		close(files->infile);
-		pid = fork_check(pid);
-		if (i == 0 && pid == 0)
-			exec_cmd(prev, fd[1], cmd);
-		if (i == argc - 5 && pid == 0)
-			exec_cmd(prev, files->outfile, cmd);
-		waitpid(pid, NULL, 0);
-		close(fd[1]);
-		close(prev);
+		if (cmd->path != NULL)
+		{
+			pipe_check(fd);
+			close(files->infile);
+			pid = fork_check(pid);
+			if (i == 0 && pid == 0)
+				exec_cmd(prev, fd[1], cmd);
+			if (i == argc - 4 && pid == 0)
+				exec_cmd(prev, files->outfile, cmd);
+			waitpid(pid, NULL, 0);
+			close(fd[1]);
+			close(prev);
+			
+		}
 		prev = fd[0];
-		i++;
 		cmd = cmd->next;
+		i++;
 	}
 	close(fd[0]);
 	close(files->outfile);

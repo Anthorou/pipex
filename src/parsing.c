@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:04:21 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/17 15:52:05 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/18 14:50:24 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,11 @@ t_list	*parsing_cmd(char **argv, int argc)
 		path = find_path(tmp[0]);
 		if (path == NULL)
 		{
-			free_tab(tmp);
-			return (free_list(cmd));
+			// free_tab(tmp);
+			// return (free_list(cmd));
 		}
-		path = trim_path(path);
+		else
+			path = trim_path(path);
 		ft_lstadd_back(&cmd, ft_lstnew(ft_split(argv[i], ' '), path));
 		free_tab(tmp);
 		i++;
