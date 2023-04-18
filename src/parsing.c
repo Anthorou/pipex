@@ -47,8 +47,8 @@ t_files	*parsing_files(char **argv, int argc)
 
 	if (access(argv[1], R_OK) == -1)
 		return (NULL);
-	// if (access(argv[argc - 1], W_OK) == -1)
-	// 	return (NULL);
+	if (access(argv[argc - 1], W_OK) == -1)
+		return (NULL);
 	files = (t_files *)malloc(sizeof(t_files));
 	files->infile = files_check(argv[1], 0);
 	files->outfile = files_check(argv[argc - 1], 1);

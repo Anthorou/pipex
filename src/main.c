@@ -48,7 +48,6 @@ static void	pipex(t_list *cmd, t_files *files, int argc)
 			waitpid(pid, NULL, 0);
 			close(fd[1]);
 			close(prev);
-			
 		}
 		prev = fd[0];
 		cmd = cmd->next;

@@ -28,7 +28,7 @@ int	files_check(char *file, int i)
 	if (i == 0)
 		fd = open(file, O_RDONLY);
 	else
-		fd = open(file, O_CREAT | O_WRONLY | O_TRUNC);
+		fd = open(file, O_WRONLY | O_TRUNC);
 	return(fd);
 }
 
