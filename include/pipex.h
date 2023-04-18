@@ -15,7 +15,7 @@
 
 # include <unistd.h>
 # include <sys/wait.h>
-# include <libc.h>
+# include <stdio.h>
 # include <string.h>
 # include "../libft/libft.h"
 
