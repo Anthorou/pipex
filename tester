@@ -1,9 +1,11 @@
 #!/bin/bash
-./pipex infile "ping -c 2 google.com" "grep hello" outfile
-< infile ping -c 2 google.com | grep hello > output
-diff outfile output > result
-if [ $? -eq 0 ]; then echo "success" >> result; fi
-echo "-------------------------------" >> result
+echo "" > result
+echo "-------------TESTER------------" >> result
+echo "" >> result
+
+
+echo "----------basic tests----------" >> result
+
 
 ./pipex infile "ls" "wc" outfile
 < infile ls | wc > output
@@ -23,26 +25,110 @@ diff outfile output >> result
 if [ $? -eq 0 ]; then echo "success" >> result; fi
 echo "-------------------------------" >> result
 
-./pipex infile "ls" "nonexist" outfile
-< infile ls | nonexist > output
+./pipex infile "grep rot" 'grep "1"' outfile
+< infile grep rot | grep "1" > output
 diff outfile output >> result
 if [ $? -eq 0 ]; then echo "success" >> result; fi
 echo "-------------------------------" >> result
 
-./pipex infile "nonexist" "cat" outfile
-< infile nonexist | cat > output
+./pipex infile "grep Hello" "awk '{count++} END {print count}'" outfile
+< infile grep Hello | awk '{count++} END {print count}' > output
 diff outfile output >> result
 if [ $? -eq 0 ]; then echo "success" >> result; fi
 echo "-------------------------------" >> result
 
-./pipex infile "ls" "nonexist" outfile
-< infile ls | nonexist > output
+
+echo "" >> result
+echo "----------error tests----------" >> result
+
+
+./pipex infile "ls" "nonexistant" outfile
+< infile ls | nonexistant > output
 diff outfile output >> result
 if [ $? -eq 0 ]; then echo "success" >> result; fi
 echo "-------------------------------" >> result
 
-./pipex infile "nonexist" "ls" outfile
-< infile nonexist | ls > output
+./pipex infile "nonexistant" "cat" outfile
+< infile nonexistant | cat > output
 diff outfile output >> result
 if [ $? -eq 0 ]; then echo "success" >> result; fi
 echo "-------------------------------" >> result
+
+./pipex infile "nonexistant" "nonexistant" outfile
+< infile nonexistant | nonexistant > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "" "nonexistant" outfile
+< infile  | nonexistant > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "nonexistant" "ls" outfile
+< infile nonexistant | ls > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "nonexistant" "ls -klajshdfljkashdfljhasdljkfh" outfile
+< infile nonexistant | ls -klajshdfljkashdfljhasdljkfh > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "nonexistant" "ls -klajshdfljkashdfljhasdljkfh" outfile
+< infile nonexistant | ls -klajshdfljkashdfljhasdljkfh > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "nonexistant" "ls -klajshdfljkashdfljhasdljkfh" "cat -**asldjfhi" outfile
+< infile nonexistant | ls -klajshdfljkashdfljhasdljkfh | cat -**asldjfhi> output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "nonexistant" "ls -klajshdfljkashdfljhasdljkfh" "cat -**asldjfhi" notexistant
+< infile nonexistant | ls -klajshdfljkashdfljhasdljkfh | cat -**asldjfhi> output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex notexistant "nonexistant" "ls -klajshdfljkashdfljhasdljkfh" "cat -**asldjfhi" outfile
+< infile nonexistant | ls -klajshdfljkashdfljhasdljkfh | cat -**asldjfhi> output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+
+./pipex infile "grep a -a" "grep b -b" "grep c -c" "grep d -d" "grep e -e" notexistant
+< infile infile | grep a -a | grep b -b | grep c -c | grep d -d | grep e -e > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "grep a -a -a -a" "grep b -b -b -b" "grep c -c -c -c" "grep d -d -d -d" "grep e -e -e -e" notexistant
+< infile infile | grep a -a -a -a| grep b -b -b -b | grep c -c -c -c | grep d -d -d -d | grep e -e -e -e > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+
+echo "" >> result
+echo "----------bonus tests----------" >> result
+
+
+./pipex infile "grep a" "grep b" "grep c" "grep d" "grep e" outfile
+< infile grep a | grep b | grep c | grep d | grep e > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+
+./pipex infile "ping -c 5 google.com" "grep round-trip" "cut -d = -f2" "cut -d / -f2" outfile
+< infile ping -c 5 google.com | grep round-trip | cut -d = -f2 | cut -d / -f2 > output
+diff outfile output >> result
+if [ $? -eq 0 ]; then echo "success" >> result; fi
+echo "-------------------------------" >> result
+echo "" >> result

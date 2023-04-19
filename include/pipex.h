@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/31 13:01:05 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/18 14:38:39 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/19 17:21:03 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 
 typedef struct s_file
 {
-	int	infile;
-	int	outfile;
+	char	*infile;
+	char	*outfile;
 }	t_files;
 
 void	free_tab(char **tab);
@@ -32,9 +32,8 @@ char	*find_path(char *argv);
 t_files	*parsing_files(char **argv, int argc);
 t_list	*parsing_cmd(char **argv, int argc);
 void	pipe_check(int *fd);
-int		files_check(char *file, int i);
 void	dup2_check(int file, int std);
 void	exec_check(t_list *cmd);
-int		fork_check(int pid);
+int		fork_check();
 
 #endif
