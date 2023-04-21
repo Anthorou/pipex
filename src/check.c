@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 11:48:12 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/19 17:20:17 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/21 17:02:24 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,17 @@ void	dup2_check(int file, int std)
 
 void	exec_check(t_list *cmd)
 {
+	if (cmd->path == NULL)
+	{
+		perror("Command");
+		exit(EXIT_FAILURE);
+	}
 	execve(cmd->path, cmd->cmds, NULL);
 	perror("execve");
+	exit(EXIT_FAILURE);
 }
 
-int	fork_check()
+int	fork_check(void)
 {
 	int	pid;
 
@@ -47,5 +53,28 @@ int	fork_check()
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	return(pid);
+	return (pid);
+}
+
+void	check_cmd(t_list *cmd)
+{
+	int	i;
+	int	j;
+
+	while (cmd)
+	{
+		i = 0;
+		while (cmd->cmds[i])
+		{
+			j = 0;
+			while (cmd->cmds[i][j] != '\0')
+			{
+				if (cmd->cmds[i][j] == '	')
+					cmd->cmds[i][j] = ' ';
+				j++;
+			}
+			i++;
+		}
+		cmd = cmd->next;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 18:19:00 by aroussea          #+#    #+#             */
-/*   Updated: 2023/02/15 12:19:14 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/21 17:01:36 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ char	*ft_strtrim(char const *s1, char const *set)
 	str[i] = 0;
 	return (str);
 }
-
+// #include <stdio.h>
 // int main(void)
 // {
-// 	printf("%s\n", ft_strtrim("lorem \n ipsum \t dolor \n sit \t amet", " "));
+// 	printf("%s\n", ft_strtrim("lorem \n ipsum \t dolor \n sit", " "));
 // }

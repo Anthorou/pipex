@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:04:21 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/19 17:13:24 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/21 17:03:43 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,16 @@ t_files	*parsing_files(char **argv, int argc)
 	t_files	*files;
 
 	if (access(argv[1], R_OK) == -1)
+	{
+		perror("files");
 		return (NULL);
-	if (access(argv[argc - 1], F_OK) != -1 && access(argv[argc - 1], W_OK) == -1)
+	}
+	if (access(argv[argc - 1], F_OK) != -1
+		&& access(argv[argc - 1], W_OK) == -1)
+	{
+		perror("files");
 		return (NULL);
+	}
 	files = (t_files *)malloc(sizeof(t_files));
 	files->infile = argv[1];
 	files->outfile = argv[argc - 1];
@@ -61,13 +68,13 @@ static char	*trim_path(char *path)
 	int		nb;
 	char	*new;
 
-	nb = ft_strlen(path) - 1;
+	nb = ft_strlen(path);
 	i = 0;
 	new = NULL;
-	if (path[nb] == '\n')
+	if (path[nb - 1] == '\n')
 	{
-		new = (char *)malloc(sizeof(char) * nb - 1);
-		while (i < nb)
+		new = (char *)malloc(sizeof(char) * nb);
+		while (i < nb - 1)
 		{
 			new[i] = path[i];
 			i++;
@@ -76,6 +83,33 @@ static char	*trim_path(char *path)
 	}
 	free(path);
 	return (new);
+}
+
+static void	check_args(char **arg)
+{
+	int		i;
+	char	tmp;
+
+	i = 0;
+	while ((*arg)[i])
+	{
+		if (((*arg)[i] == '\'' || (*arg)[i] == '\"')
+			&& ft_strchr((*arg) + i + 1, (*arg)[i]))
+		{
+			tmp = (*arg)[i];
+			(*arg)[i++] = ' ';
+			while ((*arg)[i] != tmp)
+			{
+				if ((*arg)[i] == ' ')
+					(*arg)[i] = '	';
+				i++;
+			}
+			(*arg)[i] = ' ';
+		}
+		else if ((*arg)[i] == '	')
+			(*arg)[i] = ' ';
+		i++;
+	}
 }
 
 t_list	*parsing_cmd(char **argv, int argc)
@@ -89,14 +123,10 @@ t_list	*parsing_cmd(char **argv, int argc)
 	cmd = NULL;
 	while (i < argc - 1)
 	{
+		check_args(&argv[i]);
 		tmp = ft_split(argv[i], ' ');
 		path = find_path(tmp[0]);
-		if (path == NULL)
-		{
-			// free_tab(tmp);
-			// return (free_list(cmd));
-		}
-		else
+		if (path != NULL)
 			path = trim_path(path);
 		ft_lstadd_back(&cmd, ft_lstnew(ft_split(argv[i], ' '), path));
 		free_tab(tmp);

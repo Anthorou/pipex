@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 15:04:13 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/19 17:21:19 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/21 17:02:50 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	exec_first_cmd(char *in_file, int *fd, t_list *cmd)
 {
 	int	in_fd;
 	int	pid;
-	
+
 	pipe_check(fd);
 	pid = fork_check();
 	in_fd = open(in_file, O_RDONLY);
@@ -37,9 +37,9 @@ static void	exec_cmd(int *fd, t_list *cmd, int nb)
 	int	prev;
 	int	pid;
 	int	i;
-	
+
 	i = 0;
-	while(i < nb)
+	while (i < nb)
 	{
 		prev = fd[0];
 		pipe_check(fd);
@@ -79,7 +79,7 @@ static void	exec_last_cmd(int fd, char *out_file, t_list *cmd)
 static void	pipex(t_list *cmd, t_files *files, int argc)
 {
 	int	fd[2];
-	
+
 	exec_first_cmd(files->infile, fd, cmd);
 	exec_cmd(fd, cmd->next, argc - 5);
 	exec_last_cmd(fd[0], files->outfile, ft_lstlast(cmd));
@@ -95,17 +95,10 @@ int	main(int argc, char **argv)
 	{
 		files = parsing_files(argv, argc);
 		if (files == NULL)
-		{
-			perror("files");
 			return (1);
-		}	
 		cmd = parsing_cmd(argv, argc);
-		if (cmd == NULL)
-		{
-			write(2, "cmd non valide\n", 15);
-			free_files(files);
-			return (1);
-		}
+		current = cmd;
+		check_cmd(current);
 		current = cmd;
 		pipex(current, files, argc);
 		free_files(files);
