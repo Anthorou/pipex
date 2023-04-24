@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:04:21 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/21 17:03:43 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:57:06 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ char	*find_path(char *argv)
 	else if (pid == 0)
 	{
 		dup2(fd[1], STDOUT_FILENO);
-		close(fd[0]);
 		close(fd[1]);
+		close(fd[0]);
 		execve("/usr/bin/whereis", args, NULL);
 	}
 	waitpid(pid, NULL, 0);
