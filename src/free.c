@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:57:47 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/24 15:20:04 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:50:48 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,22 @@ void	free_all(t_pops *pops)
 	free_files(pops->files);
 	free_list(pops->cmd);
 	free(pops);
+}
+
+int	end(t_pops *pops, t_list *current)
+{
+	int	re;
+
+	re = 0;
+	while (current)
+	{
+		if (current->path == NULL)
+		{
+			re = 1;
+			break ;
+		}
+		current = current->next;
+	}
+	free_all(pops);
+	return (re);
 }

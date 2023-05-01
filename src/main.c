@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 15:04:13 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/24 16:03:01 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:47:13 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static void	pipex(t_list *current, int argc, t_pops *pops)
 	exec_last_cmd(fd[0], pops, ft_lstlast(current));
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **env)
 {
 	t_pops	*pops;
 	t_list	*current;
@@ -96,13 +96,13 @@ int	main(int argc, char **argv)
 		pops->files = parsing_files(argv, argc);
 		if (pops->files == NULL)
 			return (1);
-		pops->cmd = parsing_cmd(argv, argc);
+		pops->cmd = parsing_cmd(argv, argc, env);
 		current = pops->cmd;
 		check_cmd(current);
 		current = pops->cmd;
 		pipex(current, argc, pops);
-		free_all(pops);
-		return (0);
+		current = pops->cmd;
+		return (end(pops, current));
 	}
 	write(2, "Must have 4 args!\n", 18);
 	return (1);

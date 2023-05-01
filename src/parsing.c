@@ -6,39 +6,45 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:04:21 by aroussea          #+#    #+#             */
-/*   Updated: 2023/04/24 15:57:06 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:40:12 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-char	*find_path(char *argv)
+static char	*check_path(char *path, char *cmd)
 {
-	char	*args[3];
-	char	*rep;
-	int		fd[2];
-	int		pid;
+	char	*buf;
 
-	args[0] = "whereis";
-	args[1] = argv;
-	args[2] = NULL;
-	rep = NULL;
-	pipe(fd);
-	pid = fork();
-	if (pid < 0)
-		return (NULL);
-	else if (pid == 0)
+	buf = (char *)malloc(sizeof(char) * ft_strlen(path) + ft_strlen(cmd));
+	ft_strlcpy(buf, path, ft_strlen(path) + 1);
+	ft_strlcat(buf, "/", ft_strlen(buf) + 2);
+	ft_strlcat(buf, cmd, ft_strlen(buf) + ft_strlen(cmd) + 1);
+	if (access(buf, F_OK) == 0)
+		return (buf);
+	free(buf);
+	return (NULL);
+}
+
+char	*find_path(char *cmd, char **env)
+{
+	char	*path;
+	char	**all_path;
+
+	while (*env != NULL)
 	{
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
-		close(fd[0]);
-		execve("/usr/bin/whereis", args, NULL);
+		if (ft_strncmp(*env, "PATH=", 5) == 0)
+		{
+			path = *env + 5;
+			break ;
+		}
+		env++;
 	}
-	waitpid(pid, NULL, 0);
-	close(fd[1]);
-	rep = get_all_line(fd[0], rep);
-	close(fd[0]);
-	return (rep);
+	all_path = ft_split(path, ':');
+	path = NULL;
+	while (path == NULL && *all_path != NULL)
+		path = check_path(*all_path++, cmd);
+	return (path);
 }
 
 t_files	*parsing_files(char **argv, int argc)
@@ -60,29 +66,6 @@ t_files	*parsing_files(char **argv, int argc)
 	files->infile = argv[1];
 	files->outfile = argv[argc - 1];
 	return (files);
-}
-
-static char	*trim_path(char *path)
-{
-	int		i;
-	int		nb;
-	char	*new;
-
-	nb = ft_strlen(path);
-	i = 0;
-	new = NULL;
-	if (path[nb - 1] == '\n')
-	{
-		new = (char *)malloc(sizeof(char) * nb);
-		while (i < nb - 1)
-		{
-			new[i] = path[i];
-			i++;
-		}
-		new[i] = '\0';
-	}
-	free(path);
-	return (new);
 }
 
 static void	check_args(char **arg)
@@ -112,7 +95,7 @@ static void	check_args(char **arg)
 	}
 }
 
-t_list	*parsing_cmd(char **argv, int argc)
+t_list	*parsing_cmd(char **argv, int argc, char **env)
 {
 	t_list	*cmd;
 	char	*path;
@@ -125,9 +108,7 @@ t_list	*parsing_cmd(char **argv, int argc)
 	{
 		check_args(&argv[i]);
 		tmp = ft_split(argv[i], ' ');
-		path = find_path(tmp[0]);
-		if (path != NULL)
-			path = trim_path(path);
+		path = find_path(tmp[0], env);
 		ft_lstadd_back(&cmd, ft_lstnew(ft_split(argv[i], ' '), path));
 		free_tab(tmp);
 		i++;
