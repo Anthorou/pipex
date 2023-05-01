@@ -6,7 +6,7 @@
 /*   By: aroussea <aroussea@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 16:04:21 by aroussea          #+#    #+#             */
-/*   Updated: 2023/05/01 14:40:12 by aroussea         ###   ########.fr       */
+/*   Updated: 2023/05/01 14:58:50 by aroussea         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*find_path(char *cmd, char **env)
 	char	*path;
 	char	**all_path;
 
+	path = NULL;
 	while (*env != NULL)
 	{
 		if (ft_strncmp(*env, "PATH=", 5) == 0)
@@ -40,6 +41,8 @@ char	*find_path(char *cmd, char **env)
 		}
 		env++;
 	}
+	if (path == NULL)
+		return (NULL);
 	all_path = ft_split(path, ':');
 	path = NULL;
 	while (path == NULL && *all_path != NULL)
